@@ -272,7 +272,7 @@ void kos_hexdump(const char* data, isize count) {
             if (index >= count) break;
             if (j == 0x09) fputc(' ', stderr);
             char b = data[index];
-            if (b < 32 || >= 127) fputc('.', stderr);
+            if (b < 32 || b >= 127) fputc('.', stderr);
             else fputc(b, stderr);
         }
 
