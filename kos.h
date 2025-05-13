@@ -26,6 +26,8 @@
 #ifndef KOS_H_
 #define KOS_H_
 
+#define _CRT_SECURE_NO_WARNINGS
+
 /// ======================================================================= ///
 /// Standard headers, for convenience                                       ///
 /// ======================================================================= ///
@@ -254,28 +256,37 @@ bool kos_sv_equals(kos_string_view sv0, kos_string_view sv1);
 /// ======================================================================= ///
 
 void kos_hexdump(const char* data, isize count) {
-    fprintf(stderr, "          00 01 02 03 04 05 06 07 08  09 0A 0B 0C 0D 0E 0F\n");
-    for (isize i = 0; i < count / 16; i++) {
+    fprintf(stderr, "          00 01 02 03 04 05 06 07  08 09 0A 0B 0C 0D 0E 0F\n");
+    for (isize i = 0; i < (count + 15) / 16; i++) {
         fprintf(stderr, "%08tX ", i * 16);
 
+        int nleft = 49;
         for (isize j = 0; j < 16; j++) {
             isize index = i * 16 + j;
             if (index >= count) break;
-            if (j == 0x09) fputc(' ', stderr);
-            fprintf(stderr, " %02hhX", data[index]);
+            if (j == 0x08) {
+                nleft--;
+                fputc(' ', stderr);
+            }
+            nleft -= fprintf(stderr, " %02hhX", data[index]);
         }
 
+        for (int i = 0; i < nleft; i++)
+            fputc(' ', stderr);
         fprintf(stderr, "  |");
 
+        nleft = 16;
         for (isize j = 0; j < 16; j++) {
             isize index = i * 16 + j;
             if (index >= count) break;
-            if (j == 0x09) fputc(' ', stderr);
             char b = data[index];
             if (b < 32 || b >= 127) fputc('.', stderr);
             else fputc(b, stderr);
+            nleft--;
         }
 
+        for (int i = 0; i < nleft; i++)
+            fputc(' ', stderr);
         fprintf(stderr, "|\n");
     }
 }
