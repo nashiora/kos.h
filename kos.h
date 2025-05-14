@@ -26,7 +26,9 @@
 #ifndef KOS_H_
 #define KOS_H_
 
+#ifndef _CRT_SECURE_NO_WARNINGS
 #define _CRT_SECURE_NO_WARNINGS
+#endif
 
 /// ======================================================================= ///
 /// Standard headers, for convenience                                       ///
